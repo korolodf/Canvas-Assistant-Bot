@@ -39,12 +39,13 @@ documents = co.rerank(
   top_n = 3,
 )
 
-print(documents)
+string_documents = str(documents)
+print(type(string_documents))
+print(string_documents)
 
-json_documents = convert_to_json(documents)
 
 co.chat(
   model="command",
   message= user_request,
-  documents= documents
+  documents= string_documents
   )
