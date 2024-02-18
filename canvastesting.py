@@ -1,5 +1,5 @@
-import dotenv
-import os
+#import dotenv
+#import os
 import canvasapi
 
 #dotenv.load_dotenv(dotenv.find_dotenv())
