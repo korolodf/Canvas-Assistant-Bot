@@ -1,27 +1,21 @@
 import cohere
 import json
+import re
 
-class RerankResult:
-  def __init__(self, text, index, relevance_score):
-    self.document = {'text': text}
-    self.index = index
-    self.relevance_score = relevance_score
+def extract_sentences(input_string):
+  # Define a pattern that accurately captures sentences between the specified boundaries
+  pattern = r"document\['text'\]: (.*?)(?=, index)"
 
+  # Use re.findall() to find all matches of the pattern
+  sentences = re.findall(pattern, input_string)
 
-def convert_to_json(results):
-  # Convert the list of RerankResult objects into a list of dictionaries
-  results_list = [
-    {
-      "text": result.document['text'],
-      "index": result.index,
-      "relevance_score": result.relevance_score
-    }
-    for result in results
-  ]
+  # Format the extracted sentences into the specified structure
+  formatted_data = [{"title": f"Result {index + 1}", "snippet": sentence} for index, sentence in enumerate(sentences)]
 
-  # Convert the list of dictionaries into a JSON string
-  json_str = json.dumps(results_list, indent=2)
-  return json_str
+  # Convert the structured data into JSON
+  json_output = json.dumps(formatted_data, indent=2)
+
+  return json_output
 
 #user_request = str(input("What course information are you looking for?"))
 user_request = 'name some islands in the Pacific Ocean'
@@ -32,6 +26,7 @@ docs = ['Carson City is the capital city of the American state of Nevada.',
 'Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district.',
 'Capital punishment (the death penalty) has existed in the United States since beforethe United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states.']
 
+# https://docs.cohere.com/docs/reranking
 documents = co.rerank(
   model = 'rerank-english-v2.0',
   query = user_request,
@@ -43,9 +38,11 @@ string_documents = str(documents)
 print(type(string_documents))
 print(string_documents)
 
+json_documents = extract_sentences(string_documents)
 
+# https://docs.cohere.com/docs/retrieval-augmented-generation-rag
 co.chat(
   model="command",
   message= user_request,
-  documents= string_documents
+  documents= json_documents
   )
