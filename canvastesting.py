@@ -1,4 +1,4 @@
-import dotenv
+#import dotenv
 import os
 import canvasapi
 

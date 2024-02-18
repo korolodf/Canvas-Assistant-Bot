@@ -7,6 +7,7 @@ documents=[
     {"title": "What are animals?", "snippet": "Animals are different from plants."}
   ]
 
+print(documents[1])
 print(type(documents))
 #response = co.chat(
 #  model="command",
