@@ -36,8 +36,8 @@ string_documents = str(documents)
 #print(string_documents)
 
 json_documents = extract_sentences(string_documents)
-#print(json_documents)
-#print(type(json_documents))
+print(json_documents)
+print(type(json_documents))
 
 # https://docs.cohere.com/docs/retrieval-augmented-generation-rag
 rag_response = co.chat(
@@ -45,4 +45,4 @@ rag_response = co.chat(
   message= user_request,
   documents= json_documents
   )
-print(rag_response)
+#print(rag_response)

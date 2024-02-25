@@ -1,9 +1,7 @@
-#import dotenv
-import os
 import canvasapi
+import cohere
 
-#dotenv.load_dotenv(dotenv.find_dotenv())
-#TOKEN = os.environ.get('CANVAS_API_TOKEN')
+co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
 
 TOKEN = '11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD'
 BASEURL = 'https://q.utoronto.ca'
@@ -14,6 +12,7 @@ result = canvas_api.get_user('self')
 
 courses = canvas_api.get_courses(enrollment_state='active')
 
+
 course_list = []
 for course in courses:
     try:
@@ -21,7 +20,12 @@ for course in courses:
     except AttributeError:
         continue
 
-print(course_list)
+documents = [{'title': f'Document {i+1}', 'snippet': string} for i, string in enumerate(course_list)]
+user_request = "What courses am I enrolled in?"
 
-print(type(course_list))
-
+rag_response = co.chat(
+  model="command",
+  message= user_request,
+  documents= documents
+  )
+print(rag_response.text)
