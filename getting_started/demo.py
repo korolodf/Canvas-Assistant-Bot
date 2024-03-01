@@ -12,10 +12,7 @@ def extract_sentences(input_string):
   # Format the extracted sentences into the specified structure
   formatted_data = [{"title": f"Result {index + 1}", "snippet": sentence} for index, sentence in enumerate(sentences)]
 
-  # Convert the structured data into JSON
-  json_output = json.dumps(formatted_data, indent=2)
-
-  return json_output
+  return formatted_data
 
 #user_request = str(input("What course information are you looking for?"))
 user_request = 'name some islands in the Pacific Ocean'
@@ -35,14 +32,17 @@ documents = co.rerank(
 )
 
 string_documents = str(documents)
-print(type(string_documents))
-print(string_documents)
+#print(type(string_documents))
+#print(string_documents)
 
 json_documents = extract_sentences(string_documents)
+print(json_documents)
+print(type(json_documents))
 
 # https://docs.cohere.com/docs/retrieval-augmented-generation-rag
-co.chat(
+rag_response = co.chat(
   model="command",
   message= user_request,
   documents= json_documents
   )
+#print(rag_response)

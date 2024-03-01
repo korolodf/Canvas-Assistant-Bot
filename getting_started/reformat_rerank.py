@@ -15,9 +15,9 @@ def extract_sentences_and_format_as_json(input_string):
     formatted_data = [{"title": f"Result {index + 1}", "snippet": sentence} for index, sentence in enumerate(sentences)]
 
     # Convert the structured data into JSON
-    json_output = json.dumps(formatted_data, indent=2)
+    #json_output = json.dumps(formatted_data, indent=2)
 
-    return json_output
+    return formatted_data
 
 
 # Your example input string
@@ -28,6 +28,7 @@ json_output = extract_sentences_and_format_as_json(input_string)
 
 # Print the JSON output
 print(json_output)
+print(type(json_output))
 
 
 
