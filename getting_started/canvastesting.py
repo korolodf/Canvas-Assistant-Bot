@@ -23,3 +23,5 @@ for course in courses:
 
 print(course_list)
 
+anouncements = canvas_api.get_announcements
+print(anouncements)
