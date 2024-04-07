@@ -19,7 +19,7 @@ max_turns = 10
 
 for _ in range(max_turns):
     # get user input
-    message = input("Chatterbox is ready for your message: ")
+    message = str(input("Chatterbox is ready for your message: "))
 
     # generate a response with the current chat history
     response = co.chat(
