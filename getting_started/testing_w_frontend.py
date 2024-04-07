@@ -17,6 +17,7 @@ If you cannot respond with the information you are provided with, politely expla
 ## Style Guide
 Use British English for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
 Be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
+Use bulleted lists when appropriate, like listing things, making sure to start a new line with every item.
 '''
 
 def chatbot_response(user_request, access_token):

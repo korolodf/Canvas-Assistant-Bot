@@ -41,12 +41,7 @@ def format_rerank_results_as_json(reranked_results):
 reranked_documents_str = str(reranked_documents)
 rag_format_documents = format_rerank_results_as_json(reranked_documents_str)
 
-
-<<<<<<< HEAD
 # print(json.dumps(rag_format_documents, indent=2))
-=======
-#print(json.dumps(rag_format_documents, indent=2))
->>>>>>> 80b7a3e6bebd34973a2a23d006778d3ae9d4559e
 
 chatterbox_preamble = '''
 

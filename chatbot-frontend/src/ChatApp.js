@@ -7,13 +7,17 @@ import chatProfilePhotoUrl from './circlelogo.svg';
 function ChatApp() {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
-    const [accessToken, setAccessToken] = useState(''); // State to store user's access token
+    const [accessToken, setAccessToken] = useState('');
+    const [loading, setLoading] = useState(false); // State to track loading status
 
     const sendMessage = async () => {
         try {
+            // Set loading state to true
+            setLoading(true);
+
             // Add the user's message to the messages array with "Me: " prefix and timestamp
             const currentTime = new Date().toLocaleTimeString();
-            const userMessage = inputMessage; // Assuming inputMessage is a string
+            const userMessage = inputMessage;
             const updatedMessages = [...messages, { sender: 'Me', text: userMessage, timestamp: currentTime, profilePhotoUrl: meProfilePhotoUrl }];
             setMessages(updatedMessages);
 
@@ -25,16 +29,18 @@ function ChatApp() {
             const chatbotResponse = response.data.response;
 
             // Add the chatbot's response to the messages array with timestamp
-            const botMessage = chatbotResponse; // Assuming chatbotResponse is a string
-            const updatedMessagesWithBotResponse = [...updatedMessages, { sender: 'ChatterBox', text: botMessage, timestamp: currentTime, profilePhotoUrl: chatProfilePhotoUrl }];
+            const botMessage = chatbotResponse;
+            const updatedMessagesWithBotResponse = [...updatedMessages, { sender: 'Chatterbox', text: botMessage, timestamp: currentTime, profilePhotoUrl: chatProfilePhotoUrl }];
             setMessages(updatedMessagesWithBotResponse);
 
         } catch (error) {
             console.error('Error sending message to chatbot:', error);
+        } finally {
+            // Set loading state to false after response or error
+            setLoading(false);
         }
     };
 
-    // Function to handle sending message only if access token is filled in
     const handleSendMessage = () => {
         if (accessToken) {
             sendMessage();
@@ -46,7 +52,6 @@ function ChatApp() {
     return (
         <div className="chat-container">
             <div className="input-box">
-                {/* Input field for access token */}
                 <input
                     type="text"
                     value={accessToken}
@@ -55,27 +60,25 @@ function ChatApp() {
                 />
             </div>
             <div className="chat-window">
-                {/* Display the chat messages */}
                 {messages.map((message, index) => (
                     <div key={index} className={`message ${message.sender === 'Me' ? 'user' : 'Chatterbox'}`}>
                         <img src={message.profilePhotoUrl} alt={message.sender} className="profile-photo" style={{ width: '40px', height: '40px' }} />
                         <div>
                             <div><strong>{message.sender}</strong></div>
-                            <div dangerouslySetInnerHTML={{ __html: message.text }}></div> {/* Render HTML tags */}
+                            <div dangerouslySetInnerHTML={{ __html: message.text }}></div>
                             <span className="timestamp">{message.timestamp}</span>
                         </div>
                     </div>
                 ))}
+                {loading && <div className="loading-text">Loading...</div>}
             </div>
             <div className="input-box">
-                {/* Input field for sending messages */}
                 <input
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     placeholder="Type your message..."
                 />
-                {/* Button to send message */}
                 <button onClick={handleSendMessage}>Send</button>
             </div>
         </div>

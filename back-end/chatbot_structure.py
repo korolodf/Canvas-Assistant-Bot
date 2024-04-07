@@ -19,11 +19,12 @@ max_turns = 10
 
 for _ in range(max_turns):
     # get user input
-    message = input("Chatterbox is ready for your message: ")
+    user_request = input("Chatterbox is ready for your message: ")
 
     # generate a response with the current chat history
     response = co.chat(
-        message,
+        model="command",
+        message=user_request,
         temperature=0.8,
         chat_history=chat_history,
         documents=rag_format_documents,
@@ -34,7 +35,7 @@ for _ in range(max_turns):
     print(answer)
 
     # add message and answer to the chat history
-    user_message = {"role": "USER", "text": message}
+    user_message = {"role": "USER", "text": user_request}
     bot_message = {"role": "CHATBOT", "text": answer}
 
     chat_history.append(user_message)
