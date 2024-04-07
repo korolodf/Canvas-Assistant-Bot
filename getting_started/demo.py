@@ -45,4 +45,4 @@ rag_response = co.chat(
   message= user_request,
   documents= json_documents
   )
-#print(rag_response)
+print(rag_response)

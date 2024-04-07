@@ -11,9 +11,6 @@ import requests
 
 import requests
 
-
-
-
 # Common headers for all requests
 headers = {
     'Authorization': f'Bearer {TOKEN}',

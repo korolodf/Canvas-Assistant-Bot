@@ -1,4 +1,8 @@
-student_assistant_preamble = '''
+import cohere
+
+co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
+
+student_assistant_preamble = """
 
 ## Task & Context
 Your name is Chatterbox and you are an assistant for student users of the Canvas educational platform. Your student users attend the University of Toronto. 
@@ -7,9 +11,8 @@ If you cannot respond with the information you are provided with, politely expla
 
 ## Style Guide
 Use British English for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
-When you are prompted to provide information, be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.  
-'''
-
+When you are prompted to provide information, be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
+"""
 chat_history = []
 max_turns = 10
 
