@@ -12,7 +12,7 @@
 
 .App-header {
   background-color: #ffffff;
-  min-height: 10vh;
+  min-height: 6vh;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -85,6 +85,7 @@
 
 .input-box {
   display: flex;
+  margin-bottom: 10px;
   align-items: center; /* Align items vertically */
   width: 100%; /* Ensure input-box takes full width */
 }
