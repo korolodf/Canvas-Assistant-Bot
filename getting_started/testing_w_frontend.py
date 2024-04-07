@@ -7,11 +7,23 @@ import markdown2
 app = Flask(__name__)
 CORS(app)
 
-def chatbot_response(user_request):
+chatterbox_preamble = '''
+
+## Task & Context
+Your name is Chatterbox and you are an assistant for student users of the Canvas educational platform. Your student users attend the University of Toronto. 
+When you need to use information about the student's academics, NEVER provide information that could be untrue or is not contained in your preamble or provided documents used for RAG. These documents come from the student's Canvas account through an API. 
+If you cannot respond with the information you are provided with, politely explain to the user that their request is beyond the information you have access to and suggest that they contact university staff or faculty or that they refer to Quercus online. 
+
+## Style Guide
+Use British English for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
+Be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
+'''
+chat_history = []
+
+def chatbot_response(user_request, access_token):
     co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
-    TOKEN = '11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD'
     BASEURL = 'https://q.utoronto.ca'
-    canvas_api = canvasapi.Canvas(BASEURL, TOKEN)
+    canvas_api = canvasapi.Canvas(BASEURL, access_token)
     result = canvas_api.get_user('self')
     courses = canvas_api.get_courses(enrollment_state='active')
     course_list = []
@@ -25,22 +37,36 @@ def chatbot_response(user_request):
     rag_response = co.chat(
         model="command",
         message=user_request,
-        documents=documents
+        documents=documents,
+        chat_history=chat_history,
+        preamble=chatterbox_preamble,
+        temperature=0.8
     )
     response_html = markdown2.markdown(rag_response.text)
+
+    chat_history.append(user_request)
+    chat_history.append(rag_response.text)
+
     return response_html
 
 @app.route('/chatbot', methods=['GET', 'POST'])  # Only allow POST requests
 def handle_chatbot_request():
     if request.method == 'POST':
-        # Handle POST request
-        user_request = request.json['message']
-        response_text = chatbot_response(user_request)
+        # Extract data from the request
+        request_data = request.json
+        user_request = request_data.get('message')
+        access_token = request_data.get('access_token')
+        
+        # Call the chatbot function with the user's message and access token
+        response_text = chatbot_response(user_request, access_token)
+        
+        # Return the response as JSON
         return jsonify({'response': response_text})
     elif request.method == 'GET':
         # Handle GET request (if necessary)
         return 'This is the chatbot endpoint. Send a POST request with a "message" parameter to get a response.'
-
+    else:
+        return 'Method Not Allowed', 405
     
 #@app.route('/')
 #def home():

@@ -18,8 +18,8 @@ function App() {
       </header>
     <div className="App-body">
     {/* Your main content goes here */}
-    <h1> Hi there 👋</h1>
-    <p> Hi I’m Chatterbox, your personalized Canvas helper. Please feel free to ask me any questions you might about this course, including assignment due dates, weekly announcements, or syllabus related concerns. </p>
+    <h1> 👋 Hi! I’m Chatterbox, your personalized Canvas helper. </h1>
+    <p> For me to access your information, please go to <a href="https://q.utoronto.ca/profile/settings" target="_blank" rel="noopener noreferrer">https://q.utoronto.ca/profile/settings</a> (Account Settings) scroll to <strong>Approved Integrations</strong> and generate a <strong>New Access Token</strong>.</p>
     <p> </p>
     <ChatApp /> {/* Render your chat component */}
   </div>

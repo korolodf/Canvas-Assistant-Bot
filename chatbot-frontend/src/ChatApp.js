@@ -7,25 +7,26 @@ import chatProfilePhotoUrl from './circlelogo.svg';
 function ChatApp() {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
+    const [accessToken, setAccessToken] = useState(''); // State to store user's access token
 
     const sendMessage = async () => {
         try {
             // Add the user's message to the messages array with "Me: " prefix and timestamp
             const currentTime = new Date().toLocaleTimeString();
-            const userMessage = typeof inputMessage === 'object' ? JSON.stringify(inputMessage) : inputMessage; // Convert object to string if necessary
+            const userMessage = inputMessage; // Assuming inputMessage is a string
             const updatedMessages = [...messages, { sender: 'Me', text: userMessage, timestamp: currentTime, profilePhotoUrl: meProfilePhotoUrl }];
             setMessages(updatedMessages);
 
             // Clear the input field
             setInputMessage('');
 
-            // Make a request to the Flask API endpoint with the user's message
-            const response = await axios.post('http://127.0.0.1:3000/chatbot', { message: inputMessage });
+            // Make a request to the Flask API endpoint with the user's message and access token
+            const response = await axios.post('http://127.0.0.1:3000/chatbot', { message: inputMessage, access_token: accessToken });
             const chatbotResponse = response.data.response;
 
             // Add the chatbot's response to the messages array with timestamp
-            const botMessage = typeof chatbotResponse === 'object' ? JSON.stringify(chatbotResponse) : chatbotResponse; // Convert object to string if necessary
-            const updatedMessagesWithBotResponse = [...updatedMessages, { sender: 'Chatterbox', text: botMessage, timestamp: currentTime, profilePhotoUrl: chatProfilePhotoUrl }];
+            const botMessage = chatbotResponse; // Assuming chatbotResponse is a string
+            const updatedMessagesWithBotResponse = [...updatedMessages, { sender: 'ChatterBox', text: botMessage, timestamp: currentTime, profilePhotoUrl: chatProfilePhotoUrl }];
             setMessages(updatedMessagesWithBotResponse);
 
         } catch (error) {
@@ -33,8 +34,26 @@ function ChatApp() {
         }
     };
 
+    // Function to handle sending message only if access token is filled in
+    const handleSendMessage = () => {
+        if (accessToken) {
+            sendMessage();
+        } else {
+            window.alert('Please fill in the access token.');
+        }
+    };
+
     return (
         <div className="chat-container">
+            <div className="input-box">
+                {/* Input field for access token */}
+                <input
+                    type="text"
+                    value={accessToken}
+                    onChange={(e) => setAccessToken(e.target.value)}
+                    placeholder="Paste your access token..."
+                />
+            </div>
             <div className="chat-window">
                 {/* Display the chat messages */}
                 {messages.map((message, index) => (
@@ -57,7 +76,7 @@ function ChatApp() {
                     placeholder="Type your message..."
                 />
                 {/* Button to send message */}
-                <button onClick={sendMessage}>Send</button>
+                <button onClick={handleSendMessage}>Send</button>
             </div>
         </div>
     );
