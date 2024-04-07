@@ -16,7 +16,7 @@ docs_for_rerank = [doc["text"] for doc in documents]
 # Use the rerank model to rerank the documents based on the query
 reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs_for_rerank, top_n=10)
 
-print(reranked_documents)
+#print(reranked_documents)
 
 # Extracting necessary information from reranked_documents
 import re
@@ -46,7 +46,7 @@ reranked_documents_str = str(reranked_documents)
 rag_format_documents = format_rerank_results_as_json(reranked_documents_str)
 
 
-print(json.dumps(rag_format_documents, indent=2))
+#print(json.dumps(rag_format_documents, indent=2))
 
 chatterbox_preamble = '''
 
@@ -69,6 +69,6 @@ rag_response = co.chat(
     temperature=0.8
 )
 
-print(rag_response)
+print(rag_response.text)
 # Continue with your logic, potentially printing rag_response or further processing it
 

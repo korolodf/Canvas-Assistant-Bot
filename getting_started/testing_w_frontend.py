@@ -18,7 +18,6 @@ If you cannot respond with the information you are provided with, politely expla
 Use British English for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
 Be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
 '''
-chat_history = []
 
 def chatbot_response(user_request, access_token):
     co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
@@ -38,14 +37,10 @@ def chatbot_response(user_request, access_token):
         model="command",
         message=user_request,
         documents=documents,
-        chat_history=chat_history,
         preamble=chatterbox_preamble,
         temperature=0.8
     )
     response_html = markdown2.markdown(rag_response.text)
-
-    chat_history.append(user_request)
-    chat_history.append(rag_response.text)
 
     return response_html
 
