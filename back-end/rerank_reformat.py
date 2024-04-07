@@ -12,7 +12,7 @@ docs_for_rerank = [doc["text"] for doc in documents]
 # Use the rerank model to rerank the documents based on the query
 reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs_for_rerank, top_n=10)
 
-print(reranked_documents)
+#print(reranked_documents)
 
 # Extracting necessary information from reranked_documents
 import re
@@ -42,6 +42,33 @@ reranked_documents_str = str(reranked_documents)
 rag_format_documents = format_rerank_results_as_json(reranked_documents_str)
 
 
+<<<<<<< HEAD
 # print(json.dumps(rag_format_documents, indent=2))
+=======
+#print(json.dumps(rag_format_documents, indent=2))
+>>>>>>> 80b7a3e6bebd34973a2a23d006778d3ae9d4559e
 
+chatterbox_preamble = '''
+
+## Task & Context
+Your name is Chatterbox and you are an assistant for student users of the Canvas educational platform. Your student users attend the University of Toronto. 
+When you need to use information about the student's academics, NEVER provide information that could be untrue or is not contained in your preamble or provided documents used for RAG. These documents come from the student's Canvas account through an API. 
+If you cannot respond with the information you are provided with, politely explain to the user that their request is beyond the information you have access to and suggest that they contact university staff or faculty or that they refer to Quercus online. 
+
+## Style Guide
+Use British English for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
+When you are prompted to provide information, be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
+'''
+# Then you can proceed with your API call that requires JSON serializable input
+# Example RAG model call (assuming it expects a list of strings)
+rag_response = co.chat(
+    model="command-r-plus",
+    message=user_request,
+    documents=rag_format_documents,  # Using the list of strings
+    preamble=chatterbox_preamble,
+    temperature=0.8
+)
+
+print(rag_response)
+# Continue with your logic, potentially printing rag_response or further processing it
 
