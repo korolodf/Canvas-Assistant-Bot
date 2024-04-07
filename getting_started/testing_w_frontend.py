@@ -2,6 +2,7 @@ import canvasapi
 import cohere
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import markdown2
 
 app = Flask(__name__)
 CORS(app)
@@ -26,7 +27,8 @@ def chatbot_response(user_request):
         message=user_request,
         documents=documents
     )
-    return rag_response.text
+    response_html = markdown2.markdown(rag_response.text)
+    return response_html
 
 @app.route('/chatbot', methods=['GET', 'POST'])  # Only allow POST requests
 def handle_chatbot_request():
