@@ -25,7 +25,7 @@ function ChatApp() {
             setInputMessage('');
 
             // Make a request to the Flask API endpoint with the user's message and access token
-            const response = await axios.post('http://127.0.0.1:3000/smallchatbot', { message: inputMessage, access_token: accessToken });
+            const response = await axios.post('http://127.0.0.1:4000/chatbot', { message: inputMessage, access_token: accessToken });
             const chatbotResponse = response.data.response;
 
             // Add the chatbot's response to the messages array with timestamp

@@ -3,7 +3,7 @@ import re
 import markdown2
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from document_pulling import pull_all_documents
+from document_pulling import fetch_and_append_documents
 
 app = Flask(__name__)
 CORS(app)
@@ -73,7 +73,7 @@ def handle_chatbot_request():
         access_token = request_data.get('access_token')
         
         # Call the chatbot function with the user's message and access token
-        documents = pull_all_documents(access_token)
+        documents = fetch_and_append_documents(access_token)
         documents = rerank_reformat(documents, user_request)
         response_text = chatbot_response(documents, user_request)
         
