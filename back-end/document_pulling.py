@@ -24,12 +24,31 @@ def fetch_and_append_documents(api_token):
             return []
 
     def append_course_info_to_documents(courses):
+        course_details_list = []
         for i, course in enumerate(courses, start=1):
             course_id = course.get('id')
             course_name = course.get('name', 'Unnamed Course')
             course_code = course.get('course_code', 'No Course Code Available')
-            course_details = f"Course ID: {course_id}, Course Code: {course_code}, Course Name: {course_name}"
-            documents.append({"title": f"Course {i}: {course_name} ({course_code})", "text": course_details})
+            start_at = course.get('start_at', 'No Start Date Available')
+            end_at = course.get('end_at', 'No End Date Available')
+            enrollment_term_id = course.get('enrollment_term_id', 'No Term Information Available')
+            teachers = ', '.join(
+                [teacher.get('display_name', 'Unnamed Teacher') for teacher in course.get('teachers', [])])
+
+            course_detail = (
+                f"{course_name} ({course_code})\n"
+                f"  - Course ID: {course_id}\n"
+                f"  - Start Date: {start_at}\n"
+                f"  - End Date: {end_at}\n"
+                f"  - Enrollment Term ID: {enrollment_term_id}\n"
+                f"  - Teachers: {teachers}\n"
+            )
+            course_details_list.append(course_detail)
+
+        # Join all course details into a single string
+        all_course_details = "\n".join(course_details_list)
+        # Append as a single document after generating the string
+        documents.append({"title": "All Courses", "text": all_course_details})
 
     def append_announcements_to_documents(context_codes, start_date=None, end_date=None):
         # Set end_date to today's date if not provided
@@ -98,6 +117,7 @@ def fetch_and_append_documents(api_token):
 
     # Fetch active courses for the student
     active_courses = fetch_active_courses()
+    # Append as a single document
     append_course_info_to_documents(active_courses)
 
     # Loop over each course and append documents
