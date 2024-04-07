@@ -42,6 +42,6 @@ reranked_documents_str = str(reranked_documents)
 rag_format_documents = format_rerank_results_as_json(reranked_documents_str)
 
 
-print(json.dumps(rag_format_documents, indent=2))
+# print(json.dumps(rag_format_documents, indent=2))
 
 
