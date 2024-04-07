@@ -1,8 +1,10 @@
 import canvasapi
 import cohere
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 def chatbot_response(user_request):
     co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
@@ -43,4 +45,4 @@ def handle_chatbot_request():
 #    return 'Welcome to my Flask application!'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=3000, debug=True)

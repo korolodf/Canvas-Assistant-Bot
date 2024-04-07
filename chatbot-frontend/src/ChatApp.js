@@ -17,7 +17,7 @@ function ChatApp() {
             setInputMessage('');
 
             // Make a request to the Flask API endpoint with the user's message
-            const response = await axios.post('http://127.0.0.1:5000/chatbot', { message: inputMessage });
+            const response = await axios.post('http://127.0.0.1:3000/chatbot', { message: inputMessage });
             const chatbotResponse = response.data.response;
 
             // Add the chatbot's response to the messages array with timestamp
