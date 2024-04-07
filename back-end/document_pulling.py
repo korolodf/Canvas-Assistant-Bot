@@ -30,7 +30,7 @@ def append_announcements_to_documents(context_codes, documents, start_date=None,
             message = announcement.get('message', 'No message available')
             documents.append({
                 "title": f"{context_codes[0]} announcement {i}",
-                "snippet": message[:1000]  # Safely handling None message
+                "text": message[:1000]  # Safely handling None message
             })
 
 def append_assignments_to_documents(course_id, documents, include=None):
@@ -46,7 +46,7 @@ def append_assignments_to_documents(course_id, documents, include=None):
             description = assignment.get('description', 'No description available') or 'No description available'
             documents.append({
                 "title": f"{course_id} assignment {i}",
-                "snippet": description[:1000]  # First 100 characters of the description
+                "text": description[:1000]  # First 100 characters of the description
             })
 
 def append_modules_to_documents(course_id, documents, include=None):
@@ -61,7 +61,7 @@ def append_modules_to_documents(course_id, documents, include=None):
             name = module.get('name', 'Unnamed module')
             documents.append({
                 "title": f"{course_id} module {i}",
-                "snippet": name[:1000]  # First 100 characters of the module name
+                "text": name[:1000]  # First 100 characters of the module name
             })
 
 def append_submissions_to_documents(course_id, documents, include=None):
@@ -76,7 +76,7 @@ def append_submissions_to_documents(course_id, documents, include=None):
             snippet = f"User {submission.get('user_id', 'Unknown user')}, grade: {submission.get('grade', 'No grade')}, score: {submission.get('score', 'No score')}"
             documents.append({
                 "title": f"{course_id} submission {i}",
-                "snippet": snippet[:1000]  # First 1000 characters of the snippet
+                "text": snippet[:1000]  # First 1000 characters of the snippet
             })
 
 # Example usage
@@ -90,4 +90,4 @@ append_modules_to_documents(course_id, documents, include=['items', 'content_det
 append_submissions_to_documents(course_id, documents, include=['submission_comments', 'submission_history'])
 
 # Print the structured documents
-print(json.dumps(documents, indent=2))
+#print(json.dumps(documents, indent=2))
