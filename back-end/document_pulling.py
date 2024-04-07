@@ -14,6 +14,19 @@ headers = {
     'Authorization': f'Bearer {TOKEN}',
 }
 
+def fetch_active_courses(user_id):
+    url = f"{BASEURL}/api/v1/users/{user_id}/courses"
+    params = {
+        "enrollment_state": "active",
+        "include": ["teachers"]  # Add more if needed
+    }
+    response = requests.get(url, headers=headers, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to fetch active courses. Status Code: {response.status_code}")
+        return []
+
 def append_announcements_to_documents(context_codes, documents, start_date=None, end_date=None):
     # Set end_date to today's date if not provided
     end_date = end_date or datetime.now().date().isoformat()
@@ -80,14 +93,25 @@ def append_submissions_to_documents(course_id, documents, include=None):
             })
 
 # Example usage
-context_codes = ['course_333675']
-course_id = '333675'
+# Replace the example usage part with the following
 
-# Fetch and append data to documents
-append_announcements_to_documents(context_codes, documents, start_date='2024-01-01', end_date=datetime.now().date().isoformat())
-append_assignments_to_documents(course_id, documents)
-append_modules_to_documents(course_id, documents, include=['items', 'content_details'])
-append_submissions_to_documents(course_id, documents, include=['submission_comments', 'submission_history'])
+# Fetch active courses for the student
+user_id = 'self'  # Use 'self' to refer to the current user or specify a specific user ID
+active_courses = fetch_active_courses(user_id)
 
-# Print the structured documents
-#print(json.dumps(documents, indent=2))
+# Loop over each course and fetch documents
+for course in active_courses:
+    course_id = str(course['id'])  # Ensure course_id is a string
+    course_code = course.get('course_code', 'Unknown Course')
+
+    # For announcements, you may need to adjust context_codes based on your requirements
+    context_codes = [f'course_{course_id}']
+    append_announcements_to_documents(context_codes, documents, start_date='2024-01-01', end_date=datetime.now().date().isoformat())
+
+    append_assignments_to_documents(course_id, documents)
+    append_modules_to_documents(course_id, documents, include=['items', 'content_details'])
+    append_submissions_to_documents(course_id, documents, include=['submission_comments', 'submission_history'])
+
+# At the end, documents will contain documents from all active courses
+print(json.dumps(documents, indent=2))
+

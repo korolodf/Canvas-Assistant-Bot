@@ -1,13 +1,9 @@
 from document_pulling import documents
-import re
-
 import cohere
 
 user_request = "what's your name"
 co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
 
-import cohere
-import json
 
 # Prepare documents for the `rerank` function
 # Extracting the "snippet" for each document as the text content
@@ -69,6 +65,6 @@ rag_response = co.chat(
     temperature=0.8
 )
 
-print(rag_response.text)
+print(rag_response)
 # Continue with your logic, potentially printing rag_response or further processing it
 
