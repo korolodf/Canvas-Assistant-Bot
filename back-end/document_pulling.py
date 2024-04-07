@@ -113,5 +113,7 @@ for course in active_courses:
     append_submissions_to_documents(course_id, documents, include=['submission_comments', 'submission_history'])
 
 # At the end, documents will contain documents from all active courses
-# print(json.dumps(documents, indent=2))
+print(json.dumps(documents, indent=2))
+
+
 
