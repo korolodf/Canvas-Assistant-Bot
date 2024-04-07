@@ -1,13 +1,9 @@
 from document_pulling import documents
-import re
-
 import cohere
 
 user_request = "what's your name"
 co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
 
-import cohere
-import json
 
 # Prepare documents for the `rerank` function
 # Extracting the "snippet" for each document as the text content
@@ -48,27 +44,4 @@ rag_format_documents = format_rerank_results_as_json(reranked_documents_str)
 
 print(json.dumps(rag_format_documents, indent=2))
 
-chatterbox_preamble = '''
-
-## Task & Context
-Your name is Chatterbox and you are an assistant for student users of the Canvas educational platform. Your student users attend the University of Toronto. 
-When you need to use information about the student's academics, NEVER provide information that could be untrue or is not contained in your preamble or provided documents used for RAG. These documents come from the student's Canvas account through an API. 
-If you cannot respond with the information you are provided with, politely explain to the user that their request is beyond the information you have access to and suggest that they contact university staff or faculty or that they refer to Quercus online. 
-
-## Style Guide
-Use British English for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
-When you are prompted to provide information, be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
-'''
-# Then you can proceed with your API call that requires JSON serializable input
-# Example RAG model call (assuming it expects a list of strings)
-rag_response = co.chat(
-    model="command-r-plus",
-    message=user_request,
-    documents=rag_format_documents,  # Using the list of strings
-    preamble=chatterbox_preamble,
-    temperature=0.8
-)
-
-print(rag_response)
-# Continue with your logic, potentially printing rag_response or further processing it
 
