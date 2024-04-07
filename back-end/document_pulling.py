@@ -23,6 +23,14 @@ def fetch_and_append_documents(api_token):
             print(f"Failed to fetch active courses. Status Code: {response.status_code}")
             return []
 
+    def append_course_info_to_documents(courses):
+        for i, course in enumerate(courses, start=1):
+            course_id = course.get('id')
+            course_name = course.get('name', 'Unnamed Course')
+            course_code = course.get('course_code', 'No Course Code Available')
+            course_details = f"Course ID: {course_id}, Course Code: {course_code}, Course Name: {course_name}"
+            documents.append({"title": f"Course {i}: {course_name} ({course_code})", "text": course_details})
+
     def append_announcements_to_documents(context_codes, start_date=None, end_date=None):
         # Set end_date to today's date if not provided
         end_date = end_date or datetime.now().date().isoformat()
@@ -90,6 +98,7 @@ def fetch_and_append_documents(api_token):
 
     # Fetch active courses for the student
     active_courses = fetch_active_courses()
+    append_course_info_to_documents(active_courses)
 
     # Loop over each course and append documents
     for course in active_courses:
