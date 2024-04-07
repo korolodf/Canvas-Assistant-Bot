@@ -1,5 +1,13 @@
 import cohere
-from rerank_reformat import rag_format_documents
+import re
+import markdown2
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from document_pulling import pull_all_documents
+
+app = Flask(__name__)
+CORS(app)
+
 co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
 
 chatterbox_preamble = '''
@@ -17,26 +25,73 @@ When you are prompted to provide information, be concise and not excessively cha
 chat_history = []
 max_turns = 10
 
-for _ in range(max_turns):
-    # get user input
-    user_request = input("Chatterbox is ready for your message: ")
+# Rerank and reformat function based on provided documents and user request
+def rerank_reformat(docs, user_request):
+    #Rerank documents according to user request
+    reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs, top_n=10)
 
-    # generate a response with the current chat history
-    response = co.chat(
+    # Convert the reranked_results object to a string
+    reranked_results_str = str(reranked_documents)
+
+    # Define a regex pattern to capture the document text
+    # Adjust the pattern if necessary to correctly match your data structure
+    pattern = r"document\['text'\]: (.*?)>, RerankResult<"
+
+    # Use re.findall() to find all matches of the pattern
+    # Note: The regex might need adjustment based on the exact format of the stringified reranked_results
+    matches = re.findall(pattern, reranked_results_str)
+
+    # Format the extracted text into the specified structure
+    formatted_data = [{"title": f"Result {index + 1}", "snippet": match} for index, match in enumerate(matches)]
+
+    return formatted_data
+
+# Generate chatbot response function based on provided documents and user request
+def chatbot_response(docs, user_request):
+    rag_response = co.chat(
         model="command",
         message=user_request,
-        temperature=0.8,
-        chat_history=chat_history,
-        documents=rag_format_documents,
+        documents=docs,
         preamble=chatterbox_preamble,
+        temperature=0.8
     )
-    answer = response.text
+    response_html = markdown2.markdown(rag_response.text)
 
-    print(answer)
+    return response_html
 
-    # add message and answer to the chat history
-    user_message = {"role": "USER", "text": user_request}
-    bot_message = {"role": "CHATBOT", "text": answer}
+# Create Flask App to handle chatbot conversation
+@app.route('/chatbot', methods=['GET', 'POST'])  # Only allow POST requests
+def handle_chatbot_request():
+    global chat_history 
+    if len(chat_history) >= max_turns:
+        return jsonify({'response': 'Max turns reached. Cannot continue chat.'}), 400
+    
+    if request.method == 'POST':
+        # Extract data from the request
+        request_data = request.json
+        user_request = request_data.get('message')
+        access_token = request_data.get('access_token')
+        
+        # Call the chatbot function with the user's message and access token
+        documents = pull_all_documents(access_token)
+        documents = rerank_reformat(documents, user_request)
+        response_text = chatbot_response(documents, user_request)
+        
+        # Update the chat history with user's message and bot's response
+        chat_history.append({'role': 'USER', 'text': user_request})
+        chat_history.append({'role': 'BOT', 'text': response_text})
 
-    chat_history.append(user_message)
-    chat_history.append(bot_message)
+        # Return the response as JSON
+        return jsonify({'response': response_text})
+    elif request.method == 'GET':
+        # Handle GET request (if necessary)
+        return 'This is the chatbot endpoint. Send a POST request with a "message" parameter to get a response.'
+    else:
+        return 'Method Not Allowed', 405
+    
+#@app.route('/')
+#def home():
+#    return 'Welcome to my Flask application!'
+
+if __name__ == '__main__':
+    app.run(port=4000, debug=True)

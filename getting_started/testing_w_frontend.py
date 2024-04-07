@@ -45,7 +45,7 @@ def chatbot_response(user_request, access_token):
 
     return response_html
 
-@app.route('/chatbot', methods=['GET', 'POST'])  # Only allow POST requests
+@app.route('/smallchatbot', methods=['GET', 'POST'])  # Only allow POST requests
 def handle_chatbot_request():
     if request.method == 'POST':
         # Extract data from the request
