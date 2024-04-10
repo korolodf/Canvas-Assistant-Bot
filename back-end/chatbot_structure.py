@@ -3,8 +3,8 @@ import re
 import markdown2
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from document_pulling import fetch_and_append_documents
-
+#from document_pulling import fetch_and_append_documents
+from document_pulling_and_formatting import fetch_and_append_documents
 app = Flask(__name__)
 CORS(app)
 
