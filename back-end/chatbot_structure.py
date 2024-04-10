@@ -34,7 +34,7 @@ max_turns = 10
 # Rerank and reformat function based on provided documents and user request
 def rerank_reformat(docs, user_request):
     #Rerank documents according to user request
-    reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs, top_n=10)
+    reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs, top_n=20)
 
     # Convert the reranked_results object to a string
     reranked_results_str = str(reranked_documents)
