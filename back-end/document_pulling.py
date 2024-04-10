@@ -115,10 +115,25 @@ def fetch_and_append_documents(api_token):
                     "text": snippet[:1000]  # First 1000 characters of the snippet
                 })
 
+    def append_user_profile_to_documents(user_id='self'):
+        url = f"{BASEURL}/api/v1/users/{user_id}/profile"
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            profile = response.json()
+            name = profile.get('name')
+            bio = profile.get('bio', 'No bio available')
+            avatar_url = profile.get('avatar_url', 'No avatar URL available')
+            documents.append({
+                "title": f"{name}'s Profile",
+                "text": f"Bio: {bio}\nAvatar URL: {avatar_url}"
+            })
+
+
     # Fetch active courses for the student
     active_courses = fetch_active_courses()
     # Append as a single document
     append_course_info_to_documents(active_courses)
+    append_user_profile_to_documents()
 
     # Loop over each course and append documents
     for course in active_courses:

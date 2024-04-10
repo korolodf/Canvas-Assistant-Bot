@@ -1,7 +1,7 @@
 from document_pulling import documents
 import cohere
 
-user_request = "what's your name"
+user_request = "what courses am I in?"
 co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
 
 
@@ -12,7 +12,7 @@ docs_for_rerank = [doc["text"] for doc in documents]
 # Use the rerank model to rerank the documents based on the query
 reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs_for_rerank, top_n=10)
 
-#print(reranked_documents)
+print(reranked_documents)
 
 # Extracting necessary information from reranked_documents
 import re
