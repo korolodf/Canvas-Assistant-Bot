@@ -24,6 +24,33 @@ def fetch_and_append_documents(api_token):
             print(f"Failed to fetch active courses. Status Code: {response.status_code}")
             return []
 
+
+    def append_active_courses_to_documents(courses):
+        courses_details = "\n".join([f"Course Name: {course['name']}, Course Code: {course['course_code']}, Teachers: {', '.join(teacher['display_name'] for teacher in course.get('teachers', []))}"
+                                        for course in courses])
+        preamble = "This document contains a list of all active courses:\n\n"
+        documents.append({
+            "title": "Active Courses",
+            "text": preamble + courses_details
+        })
+
+
+    def append_user_profile_to_documents():
+        user_id = 'self'  # Assuming 'self' is used for the current user context
+        url = f"{BASEURL}/api/v1/users/{user_id}/profile"
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            profile = response.json()
+            name = profile.get('name')
+            bio = profile.get('bio', 'No bio available')
+            avatar_url = profile.get('avatar_url', 'No avatar URL available')
+            preamble = f"This document contains the profile information for {name}.\n\n"
+            profile_text = f"Bio: {bio}\nAvatar URL: {avatar_url}"
+            documents.append({
+                "title": f"{name}'s Profile",
+                "text": preamble + profile_text
+            })
+
     def append_course_announcements_to_documents(course_id, course_code, start_date=None, end_date=None):
         end_date = end_date or datetime.now().date().isoformat()
         params = {
@@ -103,18 +130,20 @@ def fetch_and_append_documents(api_token):
     # Functions for modules and submissions follow a similar pattern to assignments and announcements
 
     active_courses = fetch_active_courses()
+    append_active_courses_to_documents(active_courses)
+    append_user_profile_to_documents()
     for course in active_courses:
         course_id = str(course['id'])
         course_code = course.get('course_code', 'No Course Code Available')
         # Append course information documents
-        append_course_announcements_to_documents(course_id, course_code, start_date='2024-01-01',
-                                                 end_date=datetime.now().date().isoformat())
+        append_course_announcements_to_documents(course_id, course_code, start_date='2024-01-01', end_date=datetime.now().date().isoformat())
         append_course_assignments_to_documents(course_id, course_code)
         append_course_modules_to_documents(course_id, course_code)  # Now included
         append_course_submissions_to_documents(course_id, course_code)  # Now included
 
+
+
     return documents
 
-# Example usage, remove or comment out before using this script as a module.
 documents = fetch_and_append_documents('11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD')
 print(json.dumps(documents, indent=2))
