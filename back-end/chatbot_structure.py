@@ -1,6 +1,7 @@
 import cohere
 import re
 import markdown2
+import canvasapi
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 #from document_pulling import fetch_and_append_documents
@@ -20,9 +21,11 @@ If you cannot respond with the information you are provided with, politely expla
 ## Style Guide
 Use British English spelling for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
 When you are prompted to provide information, be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
+When providing a list of things, use bulleted lists.
 
 ## Additional Considerations
 Pull from the user profile document when you begin speaking with a user to address them by name. When asked about assignments, refer to documents for both assignments and submissions. 
+Note that actual course codes are 3 capital letters followed by 3 numbers, and then H1 (Example: ABC123H1). If asked about courses, ignore information about courses that aren't in this format.
 '''
 
 chat_history = []
@@ -52,7 +55,7 @@ def rerank_reformat(docs, user_request):
 # Generate chatbot response function based on provided documents and user request
 def chatbot_response(docs, user_request):
     rag_response = co.chat(
-        model="command",
+        model="command-r-plus",
         message=user_request,
         documents=docs,
         preamble=chatterbox_preamble,
@@ -62,10 +65,35 @@ def chatbot_response(docs, user_request):
 
     return response_html
 
+
+
+# FOR TESTING
+def make_test_doc(access_token):
+    co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
+    BASEURL = 'https://q.utoronto.ca'
+    canvas_api = canvasapi.Canvas(BASEURL, access_token)
+    courses = canvas_api.get_courses(enrollment_state='active')
+    course_list = []
+    for course in courses:
+        try:
+            course_list.append(f'{course.course_code}: {course.name}')
+        except AttributeError:
+            continue
+    documents = [{'title': f'Course {i+1}', 'text': string} for i, string in enumerate(course_list)]
+
+    return documents
+
+test_doc = make_test_doc('11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD')
+test_doc.append({'title': 'blah blah this is not important', 'text': 'woopdeedoo'})
+test_doc.append({'title': 'user profile', 'text': 'Name: Jayden Jung'})
+print(test_doc)
+print('-----')
+
 # Create Flask App to handle chatbot conversation
 @app.route('/chatbot', methods=['GET', 'POST'])  # Only allow POST requests
 def handle_chatbot_request():
     global chat_history 
+    global test_doc
     if len(chat_history) >= max_turns:
         return jsonify({'response': 'Max turns reached. Cannot continue chat.'}), 400
     
@@ -76,9 +104,10 @@ def handle_chatbot_request():
         access_token = request_data.get('access_token')
         
         # Call the chatbot function with the user's message and access token
-        documents = fetch_and_append_documents(access_token)
-        documents = rerank_reformat(documents, user_request)
-        response_text = chatbot_response(documents, user_request)
+        #documents = fetch_and_append_documents(access_token)
+        rankeddocuments = rerank_reformat(test_doc, user_request)
+        #print(rankeddocuments)
+        response_text = chatbot_response(test_doc, user_request)
         
         # Update the chat history with user's message and bot's response
         chat_history.append({'role': 'USER', 'text': user_request})
