@@ -71,6 +71,40 @@ def fetch_and_append_documents(api_token):
             "text": f"This document contains all announcements for the course {course_code}.\n\n{announcements_text}"
         })
 
+    def append_user_todo_items_to_documents():
+        url = f"{BASEURL}/api/v1/users/self/todo"
+        response = requests.get(url, headers=headers)
+        todo_items_text = "TODO Items:\n"
+        if response.status_code == 200:
+            todo_items = response.json()
+            if todo_items:
+                for i, item in enumerate(todo_items, start=1):
+                    item_type = item.get('type')
+                    context_type = item.get('context_type')
+                    course_id = item.get('course_id')
+                    item_details = f"Item {i}: Type - {item_type}, Context - {context_type}, Course ID - {course_id}\n"
+
+                    # Handling different item types
+                    if item_type in ['grading', 'submitting']:
+                        if 'assignment' in item:
+                            assignment = item.get('assignment')
+                            item_details += f"Assignment: {assignment.get('name', 'No name available')}, Due at: {assignment.get('due_at', 'No due date')}\n"
+                        elif 'quiz' in item:
+                            quiz = item.get('quiz')
+                            item_details += f"Quiz: {quiz.get('title', 'No title available')}, Due at: {quiz.get('due_at', 'No due date')}\n"
+
+                    item_details += f"HTML URL: {item.get('html_url', 'No URL available')}\n\n"
+                    todo_items_text += item_details
+            else:
+                todo_items_text += "No TODO items available."
+        else:
+            todo_items_text += "Failed to fetch TODO items."
+
+        documents.append({
+            "title": "User's TODO Items",
+            "text": f"This document contains the current list of TODO items for the user. These are the upcoming events that the user should work on including assignments, classes and more\n\n{todo_items_text}"
+        })
+
     def append_course_assignments_to_documents(course_id, course_code, include=None):
         params = {'include[]': include} if include else {}
         url = f'{BASEURL}/api/v1/courses/{course_id}/assignments'
@@ -132,6 +166,7 @@ def fetch_and_append_documents(api_token):
     active_courses = fetch_active_courses()
     append_active_courses_to_documents(active_courses)
     append_user_profile_to_documents()
+    append_user_todo_items_to_documents()
     for course in active_courses:
         course_id = str(course['id'])
         course_code = course.get('course_code', 'No Course Code Available')
