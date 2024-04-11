@@ -26,6 +26,8 @@ When providing a list of things, use bulleted lists.
 ## Additional Considerations
 Pull from the user profile document when you begin speaking with a user to address them by name. When asked about assignments, refer to documents for both assignments and submissions. 
 Note that actual course codes are 3 capital letters followed by 3 numbers, and then H1 (Example: ABC123H1). If asked about courses, ignore information about courses that aren't in this format.
+Your response will be returned as HTML so make sure to include formatting for text in this format.
+When pulling on documents about Announcements, recognize that relative mentions of time like "today" and "this week" are based on the date that the announcement was made, not the current date in reality. 
 '''
 
 chat_history = []
@@ -34,7 +36,7 @@ max_turns = 10
 # Rerank and reformat function based on provided documents and user request
 def rerank_reformat(docs, user_request):
     #Rerank documents according to user request
-    reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs, top_n=20)
+    reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs, top_n=10)
 
     # Convert the reranked_results object to a string
     reranked_results_str = str(reranked_documents)
@@ -52,6 +54,14 @@ def rerank_reformat(docs, user_request):
 
     return formatted_data
 
+def rerank_reformat_new(docs, user_request):
+    reranked_documents = co.rerank(model="rerank-english-v2.0", query=user_request, documents=docs, return_documents=True, top_n=10)
+    reformatted_documents = []
+    for idx, r in enumerate(reranked_documents.results):
+        reformatted_documents.append({'text': r.document.text})
+
+    return(reformatted_documents)
+
 # Generate chatbot response function based on provided documents and user request
 def chatbot_response(docs, user_request):
     rag_response = co.chat(
@@ -64,8 +74,6 @@ def chatbot_response(docs, user_request):
     response_html = markdown2.markdown(rag_response.text)
 
     return response_html
-
-
 
 # FOR TESTING
 def make_test_doc(access_token):
@@ -82,18 +90,16 @@ def make_test_doc(access_token):
     documents = [{'title': f'Course {i+1}', 'text': string} for i, string in enumerate(course_list)]
 
     return documents
-
-test_doc = make_test_doc('11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD')
-test_doc.append({'title': 'blah blah this is not important', 'text': 'woopdeedoo'})
-test_doc.append({'title': 'user profile', 'text': 'Name: Jayden Jung'})
-print(test_doc)
-print('-----')
+#test_doc = make_test_doc('11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD')
+#test_doc.append({'title': 'blah blah this is not important', 'text': 'woopdeedoo'})
+#test_doc.append({'title': 'user profile', 'text': 'Name: Jayden Jung'})
+#print(test_doc)
+#print('-----')
 
 # Create Flask App to handle chatbot conversation
 @app.route('/chatbot', methods=['GET', 'POST'])  # Only allow POST requests
 def handle_chatbot_request():
     global chat_history 
-    global test_doc
     if len(chat_history) >= max_turns:
         return jsonify({'response': 'Max turns reached. Cannot continue chat.'}), 400
     
@@ -104,10 +110,9 @@ def handle_chatbot_request():
         access_token = request_data.get('access_token')
         
         # Call the chatbot function with the user's message and access token
-        #documents = fetch_and_append_documents(access_token)
-        rankeddocuments = rerank_reformat(test_doc, user_request)
-        #print(rankeddocuments)
-        response_text = chatbot_response(test_doc, user_request)
+        documents = fetch_and_append_documents(access_token)
+        rankeddocuments = rerank_reformat_new(documents, user_request)
+        response_text = chatbot_response(rankeddocuments, user_request)
         
         # Update the chat history with user's message and bot's response
         chat_history.append({'role': 'USER', 'text': user_request})

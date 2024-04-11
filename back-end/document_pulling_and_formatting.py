@@ -28,7 +28,7 @@ def fetch_and_append_documents(api_token):
     def append_active_courses_to_documents(courses):
         courses_details = "\n".join([f"Course Name: {course['name']}, Course Code: {course['course_code']}, Teachers: {', '.join(teacher['display_name'] for teacher in course.get('teachers', []))}"
                                         for course in courses])
-        preamble = "This document contains a list of all active courses:\n\n"
+        preamble = "This document contains a list of all the courses that the user is currently enrolled in:\n\n"
         documents.append({
             "title": "Active Courses",
             "text": preamble + courses_details
@@ -145,5 +145,5 @@ def fetch_and_append_documents(api_token):
 
     return documents
 
-documents = fetch_and_append_documents('11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD')
-print(json.dumps(documents, indent=2))
+#documents = fetch_and_append_documents('11834~AXJ7biYxaQiuIwUcz3kkkuEXlIJjD6WRF2LtVDfElrsMWw6DGmEb24GRvH9cHFHD')
+#print(json.dumps(documents, indent=2))
