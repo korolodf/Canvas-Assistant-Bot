@@ -44,7 +44,7 @@ def fetch_and_append_documents(api_token):
             name = profile.get('name')
             bio = profile.get('bio', 'No bio available')
             avatar_url = profile.get('avatar_url', 'No avatar URL available')
-            preamble = f"This document contains the profile information for {name}.\n\n"
+            preamble = f"This document contains the profile information for the current user that you are talking to, {name}.\n\n"
             profile_text = f"Bio: {bio}\nAvatar URL: {avatar_url}"
             documents.append({
                 "title": f"{name}'s Profile",

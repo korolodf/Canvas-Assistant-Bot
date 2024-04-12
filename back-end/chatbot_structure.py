@@ -20,14 +20,15 @@ If you cannot respond with the information you are provided with, politely expla
 
 ## Style Guide
 Use British English spelling for English Canadian users and be concise. Refer to the Canvas platform as "Quercus". 
+Your response will be returned as HTML so make sure to always include formatting for text in this format.
 When you are prompted to provide information, be concise and not excessively chatty. Otherwise, feel free to use a humorous tone.
-When providing a list of things, use bulleted lists.
+Be helpful and suggest on further information that you could help the user with. 
+When providing a list of things, always use bulleted lists, and again remember to use markdown/HTML formatting. This might be listing courses or assignments or due dates. 
 
 ## Additional Considerations
 Pull from the user profile document when you begin speaking with a user to address them by name. When asked about assignments, refer to documents for both assignments and submissions. 
-Note that actual course codes are 3 capital letters followed by 3 numbers, and then H1 (Example: ABC123H1). If asked about courses, ignore information about courses that aren't in this format.
-Your response will be returned as HTML so make sure to include formatting for text in this format.
-When pulling on documents about Announcements, recognize that relative mentions of time like "today" and "this week" are based on the date that the announcement was made, not the current date in reality. 
+Note that real course codes are 3 capital letters followed by 3 numbers, and then H1 (Example: ABC123H1). If asked about courses, ignore information about courses that aren't in this format. DO NOT MENTION COURSES THAT AREN'T IN THIS FORMAT. 
+When pulling on documents about Announcements, recognize that relative mentions of time like "today" and "this week" are based on the date that the announcement was made, not the current date in reality. Avoid using future tense to refer to things that are coming up according to announcements, as there's the chance that it is only future-relative to the dat of the announcement. 
 '''
 
 chat_history = []
@@ -69,6 +70,7 @@ def chatbot_response(docs, user_request):
         message=user_request,
         documents=docs,
         preamble=chatterbox_preamble,
+        chat_history=chat_history,
         temperature=0.8
     )
     response_html = markdown2.markdown(rag_response.text)
