@@ -1,3 +1,37 @@
+/*
+Faculty of Information
+University of Toronto
+Bachelor of Information
+INF453: Capstone Project
+Instructor: Dr Maher Elshakankiri
+Supervisor: Dr Rohan Alexander
+Names: Jayden Jung, Finn Korol-O'Dwyer, Sofia Sellitto
+Date created: April 12, 2024
+Date last modified: April 10, 2024
+
+This CSS (Cascading Style Sheets) file is designed to style a web-based chat application interface. The styling focuses on centering elements, using flexbox for layout management, and customizing colors and fonts to enhance user interaction and accessibility. The styles are segmented into several main components: the application container, headers, links, body, chat container, messages, profile photos, and input areas.
+
+Key Components and Their Styling:
+1. App Container (.App): Centers text alignment for the entire application.
+2. Logo (.App-logo): Specifies the logo's dimensions and margins.
+3. Header (.App-header): Styles the header with a flexible display, aligns items to the start, and adds a solid border.
+4. Links (.App-link): Sets link colors and hover effects.
+5. Body (.App-body): Applies padding and aligns text to the left for the body content.
+6. Chat Container (.chat-container): Centers the chat window within the application.
+7. Chat Window (.chat-window): Defines the chat window's borders, background color, and scrolling behavior.
+8. Messages (.message): Styles individual messages with flex layout, background color, and padding.
+9. Profile Photo (.profile-photo)**: Sets dimensions and margin for user and bot profile photos adjacent to their messages.
+10. Input Box (.input-box): Styles the input area with flex layout, ensuring it expands as needed.
+11. Timestamp (.timestamp): Styles the timestamp for messages with smaller font size and muted color.
+
+Additional Elements:
+- Media queries are set to respect the user's preference for reduced motion.
+- Hover effects, text decorations, and responsiveness are carefully considered to ensure a user-friendly experience.
+
+Purpose:
+The CSS is tailored to provide a visually appealing and functional interface for users interacting with the chat application, enhancing both aesthetics and usability.
+*/
+
 .App {
   text-align: center;
 }
