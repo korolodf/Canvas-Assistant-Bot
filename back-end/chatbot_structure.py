@@ -7,7 +7,7 @@ INF453: Capstone Project
 Instructor: Dr Maher Elshakankiri
 Supervisor: Dr Rohan Alexander
 Names: Jayden Jung, Finn Korol-O'Dwyer, Sofia Sellitto
-Date created: April 12, 2024
+Date created: March 10, 2024
 Date last modified: April 10, 2024
 
 This Flask application serves as a chatbot interface named 'Chatterbox', designed specifically for students at the University of Toronto using the Canvas (Quercus) educational platform. The chatbot utilizes the cohere.ai API to rerank and reformat academic documents pulled from Canvas, offering a conversational interface for students to query academic information.
