@@ -7,8 +7,24 @@ INF453: Capstone Project
 Instructor: Dr Maher Elshakankiri
 Supervisor: Dr Rohan Alexander
 Names: Jayden Jung, Finn Korol-O'Dwyer, Sofia Sellitto
-Date created: April 12, 2024
+Date created: March 10, 2024
 Date last modified: April 10, 2024
+
+
+This Python script interfaces with the University of Toronto's learning management system API to fetch and compile information related to a user's academic profile. It provides a comprehensive view of the user's current course enrollments, profiles, announcements, assignments, modules, submissions, and to-do items.
+
+Inputs:
+- api_token: A string representing the authorization token needed to authenticate API requests.
+
+Outputs:
+- A list of dictionaries, each representing a document that contains detailed information on various aspects of the user's academic environment. These documents include:
+  1. Active Courses: A summary of all courses the user is currently enrolled in along with instructor names.
+  2. User Profile: The user's personal profile information such as name, bio, and avatar URL.
+  3. Announcements, Assignments, Modules, Submissions, and To-Do Items for each course: Detailed lists and descriptions relevant to the user's coursework and academic responsibilities.
+
+The function fetch_and_append_documents(api_token) is the primary function used to execute these operations. The script uses the 'requests' library for API calls and handles API responses to structure the returned information into readable formats.
+
+Note: Replace the placeholder API token in the function call with an actual valid token to use this script.
 
 """
 

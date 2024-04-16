@@ -1,3 +1,45 @@
+/*
+Faculty of Information
+University of Toronto
+Bachelor of Information
+INF453: Capstone Project
+Instructor: Dr Maher Elshakankiri
+Supervisor: Dr Rohan Alexander
+Names: Jayden Jung, Finn Korol-O'Dwyer, Sofia Sellitto
+Date created: March 10, 2024
+Date last modified: April 10, 2024
+
+This JavaScript file is part of a React application specifically designed to manage a chat interface, allowing users to interact with a backend Flask chatbot API. The file handles state management, user input, and network requests using React's functional component structure with hooks, and Axios for HTTP requests.
+
+Key Components of the File:
+1. Imports:
+   - `React`, `useState`: Imported from the 'react' library to use React's core functionalities and the state hook within functional components.
+   - `axios`: Used for making HTTP requests to the backend.
+   - `meProfilePhotoUrl`, `chatProfilePhotoUrl`: Imported SVG URLs for displaying profile photos in chat messages.
+
+2. ChatApp Functional Component:
+   - Manages state for messages, input messages, access token, and loading status using React's `useState`.
+   - Defines `sendMessage` function to handle sending messages and receiving responses from the chatbot.
+   - Includes error handling and state updates throughout the interaction process.
+
+3. Key Functionalities:
+   - Input Handling: Users can enter their access token and chat messages through input fields.
+   - Message Sending: On sending a message, the app updates the message list and makes an API call.
+   - Chatbot Integration: Uses Axios to post data to a Flask API and handles the response by updating the chat interface.
+   - Loading State: Indicates to the user that a process is ongoing when waiting for the chatbot's response.
+
+4. User Interface:
+   - Renders a chat window where messages are displayed along with profile photos, sender names, and timestamps.
+   - Provides input fields for the access token and new messages, with a button to send messages.
+   - Displays a loading indicator when the app is processing a request.
+
+Purpose:
+- The `ChatApp` component provides a user-friendly interface for interacting with a backend chatbot, facilitating real-time communication.
+- It aims to simplify user interactions by managing state effectively and ensuring that all user inputs and chatbot responses are handled asynchronously.
+
+This file demonstrates advanced React practices such as functional components with hooks, conditional rendering, and client-server communication via Axios, designed to create a robust user experience in web applications.
+*/
+
 import React, { useState } from 'react';
 import axios from 'axios';
 

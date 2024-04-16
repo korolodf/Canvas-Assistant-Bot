@@ -7,8 +7,25 @@ INF453: Capstone Project
 Instructor: Dr Maher Elshakankiri
 Supervisor: Dr Rohan Alexander
 Names: Jayden Jung, Finn Korol-O'Dwyer, Sofia Sellitto
-Date created: April 12, 2024
+Date created: March 10, 2024
 Date last modified: April 10, 2024
+
+This Flask application serves as a chatbot interface named 'Chatterbox', designed specifically for students at the University of Toronto using the Canvas (Quercus) educational platform. The chatbot utilizes the cohere.ai API to rerank and reformat academic documents pulled from Canvas, offering a conversational interface for students to query academic information.
+
+Inputs:
+- access_token: A string token used to authenticate with the Canvas API.
+- user_request: A string containing the user's query or request.
+
+Outputs:
+- A JSON object containing the HTML formatted response from the chatbot, which includes information from academic documents such as course details, assignments, and user profile, contextualized to the user's queries.
+
+Key Features:
+- The chatbot leverages the Cohere API to process academic documents for relevant information based on user queries.
+- The Flask application supports POST requests where the user can submit their queries and receive formatted responses.
+- CORS (Cross-Origin Resource Sharing) is enabled to allow web-based clients to interact with the API seamlessly.
+- The chatbot maintains a history of conversation to provide context for better responses and limits the conversation to a maximum of 10 turns to prevent abuse.
+
+The application primarily uses endpoints for handling chatbot interactions, ensuring that responses are relevant and contextually accurate based on the documents retrieved from the user's Canvas account and the chatbot's defined conversational guidelines.
 
 """
 
@@ -24,8 +41,8 @@ from document_pulling_and_formatting import fetch_and_append_documents
 app = Flask(__name__)
 CORS(app)
 
+# providing API token and creating a custom preamble for the chatbot
 co = cohere.Client('pmQOVGoamfrq67yp4AaqAvsjAKcm1GIRodB27aFy')
-
 chatterbox_preamble = '''
 
 ## Task & Context
